@@ -4,11 +4,11 @@ new Vue({
         player: {
             hp: 100,
             power: 5,
-            attack() {
-                return Math.floor(Math.random() * this.power) + 5;
+            attack(especial) {
+                return Math.floor(Math.random() * (especial ? this.power + 10 : this.power)) + 5;
             },
             heal() {
-                return Math.floor(Math.random() * this.power) + 6;
+                return Math.floor(Math.random() * (this.power + 5)) + 5;
             },
         },
         monster: {
@@ -53,41 +53,18 @@ new Vue({
         init() {
             this.fighting = true;
         },
-        attack() {
-            const pAtk = this.player.attack();
+        attack(event, especial = false) {
+            const pAtk = this.player.attack(especial);
             const mAtk = this.monster.attack();
             let log = [];
 
-            this.monster.hp -= pAtk;
-            this.monster.hp = this.monster.hp < 0 ? 0 : this.monster.hp;
+            this.monster.hp = Math.max(this.monster.hp - pAtk, 0);
             log.push({
                 msg: 'You hit the monster with ' + pAtk + ' damage.',
-                class: 'warning'
+                class: especial ? 'primary' : 'warning'
             });
 
-            this.player.hp -= mAtk;
-            this.player.hp = this.player.hp < 0 ? 0 : this.player.hp;
-            log.push({
-                msg: 'The monster hit you with ' + mAtk + ' damage.',
-                class: 'danger'
-            });
-
-            this.turns.unshift(log);
-        },
-        especialAttack() {
-            const pAtk = this.player.attack() + 5;
-            const mAtk = this.monster.attack();
-            let log = [];
-
-            this.monster.hp -= pAtk;
-            this.monster.hp = this.monster.hp < 0 ? 0 : this.monster.hp;
-            log.push({
-                msg: 'You hit the monster with ' + pAtk + ' damage.',
-                class: 'primary'
-            });
-
-            this.player.hp -= mAtk;
-            this.player.hp = this.player.hp < 0 ? 0 : this.player.hp;
+            this.player.hp = Math.max(this.player.hp - mAtk, 0);
             log.push({
                 msg: 'The monster hit you with ' + mAtk + ' damage.',
                 class: 'danger'
@@ -100,15 +77,13 @@ new Vue({
             const mAtk = this.monster.attack();
             let log = [];
 
-            this.player.hp += pHeal;
+            this.player.hp = Math.min(this.player.hp + pHeal, 100);
             log.push({
                 msg: 'You have healed ' + pHeal + ' HP.',
                 class: 'success'
             });
 
-            this.player.hp -= mAtk;
-            this.player.hp = this.player.hp < 0 ? 0 : this.player.hp;
-            this.player.hp = this.player.hp > 100 ? 100 : this.player.hp;
+            this.player.hp = Math.max(this.player.hp - mAtk, 0);
             log.push({
                 msg: 'The monster hit you with ' + mAtk + ' damage.',
                 class: 'danger'
@@ -123,11 +98,12 @@ new Vue({
             this.player = {
                     hp: 100,
                     power: 5,
-                    attack() {
-                        return Math.floor(Math.random() * this.power) + 5;
+                    attack(especial) {
+                        console.log(this.power);
+                        return Math.floor(Math.random() * (especial ? this.power + 10 : this.power)) + 5;
                     },
                     heal() {
-                        return Math.floor(Math.random() * this.power) + 6;
+                        return Math.floor(Math.random() * (this.power + 5)) + 5;
                     },
                 };
 

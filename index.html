@@ -44,7 +44,7 @@
             </template>
             <template v-else-if="!done">
                 <button class="btn btn-danger m-1" @click="attack">Attack</button>
-                <button class="btn btn-warning m-1" @click="especialAttack">Especial Attack</button>
+                <button class="btn btn-warning m-1" @click="attack($event, true)">Especial Attack</button>
                 <button class="btn btn-success m-1" @click="heal">Heal</button>
                 <button class="btn btn-secondary m-1" @click="run">Run</button>
             </template>
